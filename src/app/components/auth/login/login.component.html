@@ -1,1 +1,20 @@
-<p>login works!</p>
+<h2>{{ isRegistering ? 'Register' : 'Login' }}</h2>
+<form (submit)="onSubmit()">
+  <label for="username">Username:</label>
+  <input type="text" id="username" [(ngModel)]="username" name="username" required />
+
+  <label for="password">Password:</label>
+  <input type="password" id="password" [(ngModel)]="password" name="password" required />
+
+  <button type="submit">{{ isRegistering ? 'Register' : 'Login' }}</button>
+</form>
+
+<p *ngIf="errorMessage">{{ errorMessage }}</p>
+
+<p *ngIf="!isRegistering">
+  Don't have an account? <a href="#" (click)="toggleRegister()">Register</a>
+</p>
+
+<p *ngIf="isRegistering">
+  Already have an account? <a href="#" (click)="toggleRegister()">Login</a>
+</p>

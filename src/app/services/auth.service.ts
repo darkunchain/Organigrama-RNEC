@@ -5,50 +5,80 @@ import * as bcrypt from 'bcryptjs';
   providedIn: 'root'
 })
 export class AuthService {
-  private saltRounds = 10;
-  private users: any[] = [];
+  private usersFile = '../../assets/datos.json';
 
-  hashPassword(password: string): string {
-    return bcrypt.hashSync(password, this.saltRounds);
+  constructor() {}
+
+  // Función para obtener los usuarios del archivo datos.json
+  private async getUsers(): Promise<any[]> {
+    //try {
+      console.log('usersFile: ',this.usersFile)
+      const response = await fetch(this.usersFile);
+      console.log('response: ',response)
+      const users = await response.json();
+      console.log('users: ',users)
+      return users;
+    //} catch (error) {
+      //console.error('Error al obtener usuarios:', error);
+      //return [];
+    //}
   }
 
-  verifyPassword(password: string, hash: string): boolean {
-    return bcrypt.compareSync(password, hash);
-  }
-
-  constructor() { }
-  async loadUsers(): Promise<void> {
-    const response = await fetch('assets/auth.json');
-    this.users = await response.json();
-  }
-
-  async login(username: string, password: string): Promise<boolean> {
-    const user = this.users.find((u) => u.username === username);
-
-    if (!user) {
-      return false; // Usuario no encontrado
+  // Función para guardar usuarios en datos.json
+  private async saveUsers(users: any[]): Promise<void> {
+    try {
+      const usersJson = JSON.stringify(users);
+      // Usar un servicio de backend para almacenar este archivo, por ahora se emula en el cliente
+      localStorage.setItem(this.usersFile, usersJson);
+    } catch (error) {
+      console.error('Error al guardar usuarios:', error);
     }
-
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    return isPasswordValid;
   }
 
+  // Registro de usuario con contraseña encriptada y bandera permitido
   async register(username: string, password: string): Promise<boolean> {
-    // Verificar si el usuario ya existe
-    if (this.users.find((u) => u.username === username)) {
-      return false; // Usuario ya existe
+    const users = await this.getUsers();
+    const existingUser = users.find((user) => user.valor === username); // Buscar por el nombre de usuario
+
+    if (existingUser) {
+      return false; // El usuario ya existe
     }
 
     // Encriptar la contraseña
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const saltUser = await bcrypt.genSalt(10);
+    const hashedUser = await bcrypt.hash(username, saltUser);
+    // Encriptar la contraseña
+    const saltPass = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, saltPass);
 
-    // Agregar al arreglo de usuarios
-    this.users.push({ username, password: hashedPassword });
-
-    // Guardar los usuarios actualizados en el archivo JSON (simulado)
-    console.log('Usuarios actualizados:', this.users); // Solo para pruebas
+    // Crear el nuevo usuario con la bandera permitido en false
+    users.push({ clave: hashedUser, valor: hashedPassword, permitido: false });
+    await this.saveUsers(users);
 
     return true;
   }
 
+  // Verificación de inicio de sesión
+  async login(username: string, password: string): Promise<boolean> {
+    const users = await this.getUsers();
+    const user = users.find((u) => u.valor === username); // Buscar por el nombre de usuario
+
+    if (!user || !user.permitido) {
+      return false; // El usuario no existe o no tiene permiso para ingresar
+    }
+
+    // Comparar la contraseña ingresada con la encriptada en 'clave'
+    const isMatch = await bcrypt.compare(password, user.clave);
+    return isMatch;
+  }
+
+  // Activar la bandera de permitido para un usuario
+  async activateUser(username: string): Promise<void> {
+    const users = await this.getUsers();
+    const user = users.find((u) => u.valor === username);
+    if (user) {
+      user.permitido = true;
+      await this.saveUsers(users);
+    }
+  }
 }

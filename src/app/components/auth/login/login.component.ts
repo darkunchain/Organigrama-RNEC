@@ -14,33 +14,33 @@ export class LoginComponent {
   username = '';
   password = '';
   errorMessage = '';
-  isRegistering = false;
+  isLogin = true;
 
   constructor(private authService: AuthService, private router: Router) {}
 
+  // Cambiar entre login y registro
+  toggleTab(isLogin: boolean) {
+    this.isLogin = isLogin;
+    this.errorMessage = ''; // Limpiar el mensaje de error al cambiar de pestaña
+  }
+
   async onSubmit(): Promise<void> {
-    if (this.isRegistering) {
+    if (this.isLogin) {
+      // Intentar iniciar sesión
+      const isAuthenticated = await this.authService.login(this.username, this.password);
+      if (isAuthenticated) {
+        this.router.navigate(['/editar']);
+      } else {
+        this.errorMessage = 'usuario o contraseña invalida, intente registrarse';
+      }
+    } else {
       // Registrar el nuevo usuario
       const isRegistered = await this.authService.register(this.username, this.password);
       if (isRegistered) {
-        this.router.navigate(['/home']);
+        this.router.navigate(['/grafico']);
       } else {
-        this.errorMessage = 'User already exists';
-      }
-    } else {
-      // Intentar iniciar sesión
-      await this.authService.loadUsers();
-      const isAuthenticated = await this.authService.login(this.username, this.password);
-
-      if (isAuthenticated) {
-        this.router.navigate(['/home']);
-      } else {
-        this.errorMessage = 'Invalid username or password';
+        this.errorMessage = 'el usuario ya existe, por favor vaya a la pestaña Login';
       }
     }
-  }
-  toggleRegister() {
-    this.isRegistering = !this.isRegistering;
-    this.errorMessage = ''; // Limpiar el mensaje de error al cambiar entre login y registro
   }
 }

@@ -1,0 +1,3 @@
+Node.js v22.13.0
+npm v 11.0.0
+Angular/Cli v19.1.4

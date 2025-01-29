@@ -1,23 +1,48 @@
 <!-- Botón para abrir el modal -->
-<button type="button" class="btn btn-primary" (click)="openModal()">
-  Abrir Modal
-</button>
+<div class="organigrama">
+  <div *ngFor="let tarjeta of tarjetas" class="tarjeta">
+    <img [src]="tarjeta.imagen" alt="Foto de {{ tarjeta.cargo }}" class="tarjeta-img">
+    <h3>{{ tarjeta.cargo }}</h3>
+    <p>{{ tarjeta.vertical }}</p>
+    <p>{{ tarjeta.correo }}</p>
+
+    <!-- Botón circular para abrir modal -->
+    <button class="btn btn-circle" (click)="openModal(tarjeta.id)">
+      <i class="fas fa-plus"></i>
+    </button>
+  </div>
+</div>
 
 <!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div #myModal class="modal fade" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">{{ modalTitle }}</h5>
+        <h5 class="modal-title" id="modalLabel">{{ modalTitle }}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p>{{ modalContent }}</p>
+        <label>Cargo:</label>
+        <input type="text" [(ngModel)]="selectedTarjeta.cargo" class="form-control">
+
+        <label>Vertical:</label>
+        <input type="text" [(ngModel)]="selectedTarjeta.vertical" class="form-control">
+
+        <label>Correo:</label>
+        <input type="email" [(ngModel)]="selectedTarjeta.correo" class="form-control">
+
+        <label>Estado:</label>
+        <select [(ngModel)]="selectedTarjeta.estado" class="form-control">
+          <option [value]="true">Activo</option>
+          <option [value]="false">Inactivo</option>
+        </select>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary">Guardar</button>
+        <button type="button" class="btn btn-primary" (click)="guardarTarjeta()">Guardar</button>
       </div>
     </div>
   </div>
 </div>
+
+

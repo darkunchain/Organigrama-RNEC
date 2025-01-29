@@ -1,32 +1,29 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { provideHttpClient } from '@angular/common/http'; // Importa provideHttpClient
 import { TarjetaService } from '../../../services/tarjeta.service';
+import { Tarjeta } from '../../../models/tarjeta.model';
+import { FormsModule } from '@angular/forms'; // Importar FormsModule
+
 
 
 declare var bootstrap: any; // Declara la variable global bootstrap
-interface Tarjeta {
-  id: number;
-  titulo: string;
-  subtitulo: string;
-  texto: string;
-  imagen: string;
-  parentId?: number; // ID del jefe inmediato
-}
 
 @Component({
   selector: 'app-grafico',
   templateUrl: './grafico.component.html',
   styleUrls: ['./grafico.component.css'],
   imports: [
-    CommonModule
+    CommonModule,
+    FormsModule
   ]
 })
 export class GraficoComponent implements OnInit {
+  tarjetas:Tarjeta[] =[];
   levels: Tarjeta[][] = [];
   connectionLines: any[] = [];
   highlightedTarjetas: Tarjeta[] = [];
   tarjetaSeleccionada: Tarjeta | null = null;
+  selectedTarjeta: any = { id: 0, cargo: '', vertical: '', correo: '', estado: true };
 
   @ViewChild('myModal') myModal!: ElementRef; // Referencia al modal en el HTML
   modalTitle: string = 'Detalles de la Tarjeta';
@@ -35,24 +32,47 @@ export class GraficoComponent implements OnInit {
   constructor(private tarjetaService: TarjetaService) {}
 
   ngOnInit(): void {
-    this.cargarTarjetas();
+    this.cargarTarjetas(); // Asegura que las tarjetas se cargan
+  }
+
+  ngAfterViewInit(): void {
+    this.updateConnectionLines();
   }
 
 
   cargarTarjetas(): void {
-    this.tarjetaService.getTarjetas().subscribe(
-      (tarjetas: Tarjeta[]) => {
+    this.tarjetaService.getTarjetas()
+    .subscribe({
+      next: (tarjetas: Tarjeta[]) => {
         this.levels = this.construirOrganigrama(tarjetas);
         this.updateConnectionLines();
       },
-      (error) => {
+      error: (error) => {
         console.error('Error al cargar las tarjetas:', error);
       }
-    );
+    });
+  }
+
+  guardarTarjeta(): void {
+    console.log('hello world - guardar tarjetas')
+  }
+
+  obtenerTarjetas(): void {
+  this.tarjetaService.getTarjetas()
+  .subscribe(respuesta => {
+    console.log('respuesta: ',respuesta)
+  });
+}
+
+  getTarjetaID(id:number): void {
+    this.tarjetaService.getTarjetaId(id)
+    .subscribe(respuesta => {
+      console.log('respuesta: ',respuesta)
+    });
   }
 
   // Método para abrir el modal
-  openModal() {
+  openModal(id:number) {
     const modalElement = this.myModal.nativeElement;
     const modal = new bootstrap.Modal(modalElement); // Usa Bootstrap para controlar el modal
     modal.show();
@@ -62,11 +82,11 @@ export class GraficoComponent implements OnInit {
 
   construirOrganigrama(tarjetas: Tarjeta[]): Tarjeta[][] {
     const levels: Tarjeta[][] = [];
-  
+
     // Paso 1: Encontrar las tarjetas raíz (las que no tienen parentId)
     const rootTarjetas = tarjetas.filter(tarjeta => !tarjeta.parentId);
     levels.push(rootTarjetas);
-  
+
     // Paso 2: Construir los niveles subordinados
     let currentLevel = rootTarjetas;
     while (currentLevel.length > 0) {
@@ -80,19 +100,21 @@ export class GraficoComponent implements OnInit {
       }
       currentLevel = nextLevel;
     }
-  
     return levels;
   }
 
 
   updateConnectionLines(): void {
+    if (typeof document === 'undefined') {
+      return; // Evita ejecutar el código en el servidor
+    }
+
     this.connectionLines = []; // Reinicia las líneas de conexión
-  
-    // Recorre cada nivel y dibuja las líneas
+
     for (let i = 0; i < this.levels.length - 1; i++) {
       const currentLevel = this.levels[i];
       const nextLevel = this.levels[i + 1];
-  
+
       currentLevel.forEach(tarjeta => {
         const tarjetaElement = document.getElementById(`tarjeta-${tarjeta.id}`);
         if (tarjetaElement) {
@@ -100,13 +122,11 @@ export class GraficoComponent implements OnInit {
           subordinates.forEach(subordinate => {
             const subordinateElement = document.getElementById(`tarjeta-${subordinate.id}`);
             if (subordinateElement) {
-              // Calcula las posiciones de las tarjetas
               const startX = tarjetaElement.offsetLeft + tarjetaElement.offsetWidth / 2;
               const startY = tarjetaElement.offsetTop + tarjetaElement.offsetHeight;
               const endX = subordinateElement.offsetLeft + subordinateElement.offsetWidth / 2;
               const endY = subordinateElement.offsetTop;
-  
-              // Almacena la línea de conexión
+
               this.connectionLines.push({ startX, startY, endX, endY });
             }
           });

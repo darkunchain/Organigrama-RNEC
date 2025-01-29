@@ -57,4 +57,61 @@ export class GraficoComponent implements OnInit {
     const modal = new bootstrap.Modal(modalElement); // Usa Bootstrap para controlar el modal
     modal.show();
   }
+
+
+
+  construirOrganigrama(tarjetas: Tarjeta[]): Tarjeta[][] {
+    const levels: Tarjeta[][] = [];
+  
+    // Paso 1: Encontrar las tarjetas raíz (las que no tienen parentId)
+    const rootTarjetas = tarjetas.filter(tarjeta => !tarjeta.parentId);
+    levels.push(rootTarjetas);
+  
+    // Paso 2: Construir los niveles subordinados
+    let currentLevel = rootTarjetas;
+    while (currentLevel.length > 0) {
+      const nextLevel: Tarjeta[] = [];
+      currentLevel.forEach(tarjeta => {
+        const subordinates = tarjetas.filter(t => t.parentId === tarjeta.id);
+        nextLevel.push(...subordinates);
+      });
+      if (nextLevel.length > 0) {
+        levels.push(nextLevel);
+      }
+      currentLevel = nextLevel;
+    }
+  
+    return levels;
+  }
+
+
+  updateConnectionLines(): void {
+    this.connectionLines = []; // Reinicia las líneas de conexión
+  
+    // Recorre cada nivel y dibuja las líneas
+    for (let i = 0; i < this.levels.length - 1; i++) {
+      const currentLevel = this.levels[i];
+      const nextLevel = this.levels[i + 1];
+  
+      currentLevel.forEach(tarjeta => {
+        const tarjetaElement = document.getElementById(`tarjeta-${tarjeta.id}`);
+        if (tarjetaElement) {
+          const subordinates = nextLevel.filter(t => t.parentId === tarjeta.id);
+          subordinates.forEach(subordinate => {
+            const subordinateElement = document.getElementById(`tarjeta-${subordinate.id}`);
+            if (subordinateElement) {
+              // Calcula las posiciones de las tarjetas
+              const startX = tarjetaElement.offsetLeft + tarjetaElement.offsetWidth / 2;
+              const startY = tarjetaElement.offsetTop + tarjetaElement.offsetHeight;
+              const endX = subordinateElement.offsetLeft + subordinateElement.offsetWidth / 2;
+              const endY = subordinateElement.offsetTop;
+  
+              // Almacena la línea de conexión
+              this.connectionLines.push({ startX, startY, endX, endY });
+            }
+          });
+        }
+      });
+    }
+  }
 }

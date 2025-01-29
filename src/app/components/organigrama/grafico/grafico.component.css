@@ -1,0 +1,40 @@
+/* Estilos personalizados para el modal */
+.modal-content {
+  border-radius: 10px; /* Bordes redondeados */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra */
+}
+
+.modal-header {
+  background-color: #007bff; /* Color de fondo del encabezado */
+  color: white; /* Color del texto */
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.modal-title {
+  font-weight: bold; /* Texto en negrita */
+}
+
+.modal-body {
+  padding: 20px; /* Espaciado interno */
+}
+
+.modal-footer {
+  border-top: 1px solid #ddd; /* Borde superior */
+  padding: 15px; /* Espaciado interno */
+}
+
+/* Estilos para los botones */
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+
+.btn-close {
+  filter: invert(1); /* Invertir el color del ícono de cierre */
+}

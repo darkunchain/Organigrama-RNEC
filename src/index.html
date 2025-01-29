@@ -7,6 +7,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/gif" href="img/TIGO-Guino.gif">
   <!-- <link rel="icon" type="image/x-icon" href="favicon.ico"> -->
+  <style>
+    /* Define una fuente personalizada local */
+    @font-face {
+        font-family: 'tigo-bold';
+        src: url('./assets/fonts/DMSans-Bold.ttf') format('truetype');
+        font-weight: 400;
+        font-style: normal;
+    }
+    @font-face {
+        font-family: 'tigo-light';
+        src: url('./assets/fonts/DMSans-Light.ttf') format('truetype');
+        font-weight: 400;
+        font-style: normal;
+    }
+
+    /* Aplica fuentes */
+    body {
+        font-family: 'tigo-light'; /* Fuente global */
+    }
+  </style>
 </head>
 <body>
   <app-root></app-root>

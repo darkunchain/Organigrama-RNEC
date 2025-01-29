@@ -12,12 +12,24 @@ export const routes: Routes = [
       import('./components/home/home.component').then((m) => m.HomeComponent),
   },
   {
-    path: '**',
-    redirectTo: 'home', // Ruta de fallback
-  },
-  {
     path: 'editar',
     loadComponent: () =>
       import('./components/organigrama/editar/editar.component').then((m) => m.EditarComponent),
+  },
+  {
+    path: 'organigrama',
+    loadComponent: () =>
+      import('./components/organigrama/grafico/grafico.component').then((m) => m.GraficoComponent),
+  },
+  {
+    path: 'grafico',
+    loadComponent: () =>
+      import('./components/organigrama/grafico/grafico.component').then((m) => m.GraficoComponent),
+  },
+
+
+  {
+    path: '**',
+    redirectTo: 'home', // Ruta de fallback
   },
 ];

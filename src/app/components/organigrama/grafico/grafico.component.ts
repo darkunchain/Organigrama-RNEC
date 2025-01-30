@@ -19,25 +19,34 @@ declare var bootstrap: any; // Declara la variable global bootstrap
     FormsModule
   ]
 })
-export class GraficoComponent implements OnInit {
-  tarjetas:Tarjeta[] =[];
+export class GraficoComponent implements OnInit {  
   levels: Tarjeta[][] = [];
   connectionLines: any[] = [];
   highlightedTarjetas: Tarjeta[] = [];
   tarjetaSeleccionada: Tarjeta | null = null;
   selectedTarjeta: any = { id: 0, cargo: '', vertical: '', correo: '', estado: true };
-  mistarjetas:any =""
+  tarjetas: Tarjeta[] = []; // Inicializa la variable
+  
 
   @ViewChild('myModal') myModal!: ElementRef; // Referencia al modal en el HTML
   modalTitle: string = 'Detalles de la Tarjeta';
   modalContent: string = 'Aquí van los detalles adicionales de la tarjeta.';
+ 
   
   constructor(private tarjetaService: TarjetaService) {}
 
-  ngOnInit(): void {
-    console.log('Tarjetas cargadas:', this.selectedTarjeta);
-    this.mistarjetas = this.obtenerTarjetas()
-    console.log('mistarjetasTarjetas cargadas:', this.mistarjetas);
+  ngOnInit(): void {    
+/*     this.tarjetaService.getTarjetas()
+    .subscribe(respuesta => {
+    console.log('respuesta: ',respuesta)
+    this.tarjetas = respuesta;
+    }); */
+    this.tarjetaService.getTarjetas()
+    .subscribe((respuesta: Tarjeta[]) => {
+        this.levels = this.construirOrganigrama(respuesta);
+        this.updateConnectionLines();
+        this.tarjetas = respuesta
+      });
   }
 
   ngAfterViewInit(): void {
@@ -84,8 +93,8 @@ export class GraficoComponent implements OnInit {
   openModal(id:number) {
     //const modalElement = this.myModal.nativeElement;
     //const modal = new bootstrap.Modal(modalElement); // Usa Bootstrap para controlar el modal
-    this.selectedTarjeta = this.tarjetas.find(t => t.id === id);
-    this.modalTitle = this.selectedTarjeta ? this.selectedTarjeta.cargo : 'Nuevo Registro';
+    //this.selectedTarjeta = this.tarjetas.find(t => t.id === id);
+    //this.modalTitle = this.selectedTarjeta ? this.selectedTarjeta.cargo : 'Nuevo Registro';
 
     const modal = new bootstrap.Modal(this.myModal.nativeElement);
     modal.show();

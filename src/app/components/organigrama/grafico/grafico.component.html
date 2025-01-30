@@ -3,13 +3,13 @@
 <div class="organigrama">
   <div *ngFor="let tarjeta of tarjetas" class="tarjeta">    
     <img [src]="tarjeta.imagen" alt="Foto de {{ tarjeta.cargo }}" class="tarjeta-img">
-    <h3>{{ tarjeta.cargo }}</h3>
-    <p>{{ tarjeta.vertical }}</p>
-    <p>{{ tarjeta.correo }}</p>
+    <h5>{{ tarjeta.nombre }}</h5>
+    <p>{{ tarjeta.cargo }}</p>
+    
 
     <!-- Botón circular para abrir modal -->
     <button class="btn btn-circle" (click)="openModal(tarjeta.id)">
-      <!-- <i class="fas fa-plus"></i> -->hola modal
+      <i class="fas fa-plus"></i>
     </button>
   </div>
 </div>

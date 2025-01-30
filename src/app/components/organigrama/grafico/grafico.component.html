@@ -1,6 +1,7 @@
 <!-- Botón para abrir el modal -->
+<div>hello world, estoy en organigrama</div>
 <div class="organigrama">
-  <div *ngFor="let tarjeta of tarjetas" class="tarjeta">
+  <div *ngFor="let tarjeta of tarjetas" class="tarjeta">    
     <img [src]="tarjeta.imagen" alt="Foto de {{ tarjeta.cargo }}" class="tarjeta-img">
     <h3>{{ tarjeta.cargo }}</h3>
     <p>{{ tarjeta.vertical }}</p>
@@ -8,7 +9,7 @@
 
     <!-- Botón circular para abrir modal -->
     <button class="btn btn-circle" (click)="openModal(tarjeta.id)">
-      <i class="fas fa-plus"></i>
+      <!-- <i class="fas fa-plus"></i> -->hola modal
     </button>
   </div>
 </div>

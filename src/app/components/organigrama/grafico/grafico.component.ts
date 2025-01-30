@@ -8,6 +8,8 @@ import { FormsModule } from '@angular/forms'; // Importar FormsModule
 
 declare var bootstrap: any; // Declara la variable global bootstrap
 
+
+
 @Component({
   selector: 'app-grafico',
   templateUrl: './grafico.component.html',
@@ -24,19 +26,26 @@ export class GraficoComponent implements OnInit {
   highlightedTarjetas: Tarjeta[] = [];
   tarjetaSeleccionada: Tarjeta | null = null;
   selectedTarjeta: any = { id: 0, cargo: '', vertical: '', correo: '', estado: true };
+  mistarjetas:any =""
 
   @ViewChild('myModal') myModal!: ElementRef; // Referencia al modal en el HTML
   modalTitle: string = 'Detalles de la Tarjeta';
   modalContent: string = 'Aquí van los detalles adicionales de la tarjeta.';
-
+  
   constructor(private tarjetaService: TarjetaService) {}
 
   ngOnInit(): void {
-    this.cargarTarjetas(); // Asegura que las tarjetas se cargan
+    console.log('Tarjetas cargadas:', this.selectedTarjeta);
+    this.mistarjetas = this.obtenerTarjetas()
+    console.log('mistarjetasTarjetas cargadas:', this.mistarjetas);
   }
 
   ngAfterViewInit(): void {
     this.updateConnectionLines();
+  }
+
+  log(value: any): void {
+    console.log(value);
   }
 
 
@@ -73,8 +82,12 @@ export class GraficoComponent implements OnInit {
 
   // Método para abrir el modal
   openModal(id:number) {
-    const modalElement = this.myModal.nativeElement;
-    const modal = new bootstrap.Modal(modalElement); // Usa Bootstrap para controlar el modal
+    //const modalElement = this.myModal.nativeElement;
+    //const modal = new bootstrap.Modal(modalElement); // Usa Bootstrap para controlar el modal
+    this.selectedTarjeta = this.tarjetas.find(t => t.id === id);
+    this.modalTitle = this.selectedTarjeta ? this.selectedTarjeta.cargo : 'Nuevo Registro';
+
+    const modal = new bootstrap.Modal(this.myModal.nativeElement);
     modal.show();
   }
 

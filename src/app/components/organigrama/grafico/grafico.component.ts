@@ -20,7 +20,7 @@ declare var bootstrap: any; // Declara la variable global bootstrap
 
   ]
 })
-export class GraficoComponent implements OnInit, AfterViewChecked,AfterViewInit
+export class GraficoComponent implements OnInit, AfterViewChecked,AfterViewInit{
   levels: Tarjeta[][] = [];
   connectionLines: any[] = [];
   highlightedTarjetas: Tarjeta[] = [];
@@ -339,5 +339,5 @@ export class GraficoComponent implements OnInit, AfterViewChecked,AfterViewInit
 
 
 
-
+}
 

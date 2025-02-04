@@ -1,21 +1,35 @@
-<!-- Botón para abrir el modal -->
-<div>hello world, estoy en organigrama</div>
-<div class="organigrama">
-  <div *ngFor="let tarjeta of tarjetas" class="tarjeta">    
-    <img [src]="tarjeta.imagen" alt="Foto de {{ tarjeta.cargo }}" class="tarjeta-img">
-    <h5>{{ tarjeta.nombre }}</h5>
-    <p>{{ tarjeta.cargo }}</p>
-    
 
-    <!-- Botón circular para abrir modal -->
-    <button class="btn btn-circle" (click)="openModal(tarjeta.id)">
-      <i class="fas fa-plus"></i>
-    </button>
+<div class="organigrama-container">
+  <div *ngFor="let nivel of levels; let i = index" class="nivel">
+    <div *ngFor="let otro of nivel; let j = index" class="nivel">
+      <div class="row">
+        <div class="tarjeta" id="tarjeta{{i+j}}">
+          <img [src]="nivel[j].imagen" alt="{{ nivel[j].nombre }}" /> <!-- //donde -->
+          <div class="info">
+            <h3>{{ i + " " + j + nivel[j].nombre }}</h3>
+            <p>{{ nivel[j].cargo }}</p>
+            <p>{{ nivel[j].vertical }}</p>
+            <p>{{ nivel[j].correo }}</p>
+          </div>
+          <button class="btn btn-circle" (click)="openModal(nivel[j].id)">
+            <i class="fas fa-plus"></i>
+          </button>
+        </div>
+    </div>
   </div>
 </div>
 
+<svg class="lineas-contenedor">
+  <!-- Las líneas se generarán dinámicamente aquí -->
+</svg>
+
+
+
+
+
+
 <!-- Modal -->
-<div #myModal class="modal fade" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+<div #myModal class="modal fade" tabindex="-1" aria-labelledby="modalLabel" [attr.aria-hidden]="isModalVisible ? 'false' : 'true'">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">

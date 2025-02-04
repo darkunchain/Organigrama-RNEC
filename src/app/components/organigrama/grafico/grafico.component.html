@@ -3,7 +3,7 @@
   <div *ngFor="let nivel of levels; let i = index" class="nivel">
     <div *ngFor="let otro of nivel; let j = index" class="nivel">
       <div class="row">
-        <div class="tarjeta" id="tarjeta{{i+j}}">
+        <div class="tarjeta" id="tarjeta{{nivel[j].id}}">
           <img [src]="nivel[j].imagen" alt="{{ nivel[j].nombre }}" /> <!-- //donde -->
           <div class="info">
             <h3>{{ i + " " + j + nivel[j].nombre }}</h3>

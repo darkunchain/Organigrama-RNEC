@@ -29,6 +29,8 @@ export class GraficoComponent implements OnInit, AfterViewChecked,AfterViewInit{
   tarjetas: Tarjeta[] = []; // Inicializa la variable
   children:any[] =[]
   isModalVisible:boolean = false
+  conectores: [number | null, number][] =[]
+  indices: [number | null, number][] =[]
   //const elemento: HTMLElement = document.createElement('div');
 
   @Input() data: Tarjeta[] = [];
@@ -58,29 +60,30 @@ export class GraficoComponent implements OnInit, AfterViewChecked,AfterViewInit{
   ngOnInit(): void {
     this.tarjetaService.getTarjetas()
     .subscribe((respuesta: Tarjeta[]) => {
-        this.levels = this.construirOrganigrama(respuesta);
-        this.updateConnectionLines();
-        this.tarjetas = respuesta
-      });
+        this.levels = this.construirOrganigrama(respuesta);        
+        this.tarjetas = respuesta;        
+        this.indices = this.tarjetas
+        .filter((conector: Tarjeta) => conector.parentId !== undefined && conector.parentId !== null)
+        .map((conector: Tarjeta) => {          
+          const inicioIdx = this.tarjetas.findIndex(t => t.id === conector.parentId);
+          const finIdx = this.tarjetas.findIndex(t => t.id === conector.id);
+          return (inicioIdx !== -1 && finIdx !== -1) ? [inicioIdx, finIdx] : null;
+        })
+        .filter((conector): conector is [number, number] => conector !== null); // Elimina los `null`
+
+        this.conectores = this.tarjetas
+        .filter((conector:Tarjeta) => conector.parentId !== undefined && conector.parentId !== null )
+        .map((conector:Tarjeta) => [Number(conector.parentId), Number(conector.id)]);      
+      this.updateConnectionLines();
+    });
 
       if (isPlatformBrowser(this.platformId)) {
-        // Observar cambios en el DOM
-        //const observer = new MutationObserver(() => {
-        //  this.dibujarLineas();
-        //});
+        
         window.addEventListener('resize', () => this.dibujarLineas());
-        // Escuchar cambios en el DOM (opcional, si las tarjetas se mueven dinámicamente)
-        //this.observarCambiosEnDOM();
-
-        // Configurar el observador
-        //const config = { childList: true, subtree: true };
-        //observer.observe(this.el.nativeElement, config);
-        // Dibujar líneas inicialmente
-        //this.dibujarLineas();
-
+        
         setTimeout(() => {
           this.dibujarLineas();
-        }, 600);
+        }, 1200);
       }
 
 
@@ -260,19 +263,17 @@ export class GraficoComponent implements OnInit, AfterViewChecked,AfterViewInit{
       svg.innerHTML = '';
 
       // Definir las conexiones que deseas dibujar
-      const conexiones = [
-        [0-0, 1-0], // Conectar tarjeta 0 con tarjeta 1
-        [0-0, 1-1],
-        [0-0, 1-2],
-        [0-0, 1-3],
-        // Agrega más pares según sea necesario
-      ];
+      console.log('relaciones: ',this.conectores);  
+      //const conexiones = [[0, 1],[0-0, 1-1],[0-0, 1-2],[0-0, 1-3]];
+      const conexiones = this.indices
 
       // Recorrer las conexiones y dibujar las líneas
-      conexiones.forEach(([inicioIdx, finIdx]) => {
-        const tarjetaInicio = tarjetas[inicioIdx] as HTMLElement;
-        const tarjetaFin = tarjetas[finIdx] as HTMLElement;
-
+      
+      conexiones.forEach(([inicioIdx, finIdx]) => {        
+        console.log('inicioIdx: ',inicioIdx,' finIdx: ',finIdx);
+        const tarjetaInicio = tarjetas[inicioIdx as number] as HTMLElement;
+        const tarjetaFin = tarjetas[finIdx as number] as HTMLElement;
+        console.log('tarjeta-inicio: ',tarjetaInicio,'  tarjeta-fin: ',tarjetaFin)
         if (tarjetaInicio && tarjetaFin) {
           const coordenadasInicio = tarjetaInicio.getBoundingClientRect();
           const coordenadasFin = tarjetaFin.getBoundingClientRect();

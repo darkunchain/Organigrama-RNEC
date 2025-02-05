@@ -1,3 +1,72 @@
+.organigrama-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.nivel-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.nivel {
+  display: flex;
+  justify-content: space-around; /* Ajusta la distribución */
+  width: 100%;
+  position: relative;
+}
+
+.tarjeta-container {
+  display: flex;
+  justify-content: center;
+  flex-grow: 1; /* Hace que las tarjetas ocupen espacio equitativo */
+}
+
+.tarjeta {
+  width: 150px;
+  text-align: center;
+  background: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  position: relative;
+}
+
+.tarjeta img {
+  width: 100%;
+  border-radius: 50%;
+}
+
+/* Conectar los nodos con líneas */
+.nivel-container:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #000;
+}
+
+.tarjeta::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  width: 2px;
+  height: 10px;
+  background: #000;
+  transform: translateX(-50%);
+}
+
+
+
+
+
+
+
+
 /* Estilos personalizados para el modal */
 .modal-content {
   border-radius: 10px; /* Bordes redondeados */
@@ -78,7 +147,7 @@
 
 /* organigrama.component.css */
 
-.organigrama-container {
+/* .organigrama-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -89,7 +158,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 20px 30px;
+  margin: 50px 30px;/*distancia entre las tarjetas (horizontal vertical)*/
   position: relative;
 }
 
@@ -189,4 +258,4 @@
   height: 100%;
   pointer-events: none; /* Para que no interfiera con los clics en las tarjetas */
 }
-
+ */

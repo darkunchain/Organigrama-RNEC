@@ -4,10 +4,10 @@
     <div class="nivel">
       <div *ngFor="let otro of nivel; let j = index" class="tarjeta-container">
         <!-- <div class="tarjeta" [id]="'tarjeta' + getIndex(nivel[j].id)"> -->
-          <div class="tarjeta" [style.order]="getCentralIndex(nivel[j].id)"> 
+          <div class="tarjeta" [style.order]="getCentralIndex(nivel[j].id)">
           <img [src]="nivel[j].imagen" alt="{{ nivel[j].nombre }}" />
           <div class="info">
-            <h3>{{ i + " " + j + nivel[j].nombre }}</h3>
+            <h3>{{nivel[j].nombre }}</h3>
             <p>{{ nivel[j].cargo }}</p>
             <p>{{ nivel[j].vertical }}</p>
             <p>{{ nivel[j].correo }}</p>

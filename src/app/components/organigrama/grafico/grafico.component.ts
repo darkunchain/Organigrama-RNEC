@@ -63,14 +63,14 @@ export class GraficoComponent implements OnInit, AfterViewChecked,AfterViewInit{
     this.tarjetaService.getTarjetas()
     .subscribe((respuesta: Tarjeta[]) => {
       const resultado = this.construirOrganigrama(respuesta);
-      this.levels = resultado.niveles;  // Ahora asignamos solo los niveles correctamente      
+      this.levels = resultado.niveles;  // Ahora asignamos solo los niveles correctamente
       this.relationships = resultado.relaciones; // Guarda las relaciones si las necesitas
       this.indiceTarjeta = resultado.relacionesIndexadas
       console.log('indiceTarjetas:',this.indiceTarjeta)
       this.tarjetas = respuesta;
       this.indices = this.tarjetas
       .filter((conector: Tarjeta) => conector.parentId !== undefined && conector.parentId !== null)
-      .map((conector: Tarjeta) => {          
+      .map((conector: Tarjeta) => {
         const inicioIdx = this.tarjetas.findIndex(t => t.id === conector.parentId);
         const finIdx = this.tarjetas.findIndex(t => t.id === conector.id);
         return (inicioIdx !== -1 && finIdx !== -1) ? [inicioIdx, finIdx] : null;
@@ -79,14 +79,14 @@ export class GraficoComponent implements OnInit, AfterViewChecked,AfterViewInit{
 
       this.conectores = this.tarjetas
       .filter((conector:Tarjeta) => conector.parentId !== undefined && conector.parentId !== null )
-      .map((conector:Tarjeta) => [Number(conector.parentId), Number(conector.id)]);      
+      .map((conector:Tarjeta) => [Number(conector.parentId), Number(conector.id)]);
       this.updateConnectionLines();
     });
 
       if (isPlatformBrowser(this.platformId)) {
-        
+
         window.addEventListener('resize', () => this.dibujarLineas());
-        
+
         setTimeout(() => {
           this.dibujarLineas();
         }, 1200);
@@ -200,13 +200,13 @@ export class GraficoComponent implements OnInit, AfterViewChecked,AfterViewInit{
 
   construirOrganigrama(tarjetas: Tarjeta[]): { niveles: Tarjeta[][], relaciones: number[][], relacionesIndexadas: { subo: number; ind: number }[] } {
     const niveles: Tarjeta[][] = [];
-    const relaciones: number[][] = [];    
+    const relaciones: number[][] = [];
     const relacionesIndexadas: { subo: number; ind: number }[] = [];
-  
+
     // Paso 1: Encontrar las tarjetas raíz (las que no tienen parentId)
     const rootTarjetas = tarjetas.filter(tarjeta => !tarjeta.parentId);
     niveles.push(rootTarjetas);
-  
+
     // Asignar índices a cada tarjeta
     let index = 0;
     const indexMap = new Map<number, number>(); // Mapa para almacenar índices por id
@@ -214,7 +214,7 @@ export class GraficoComponent implements OnInit, AfterViewChecked,AfterViewInit{
       indexMap.set(tarjeta.id, index);
       index++;
     });
-  
+
     // Paso 2: Construir los niveles subordinados y relaciones
     let currentLevel = rootTarjetas;
     while (currentLevel.length > 0) {
@@ -222,8 +222,8 @@ export class GraficoComponent implements OnInit, AfterViewChecked,AfterViewInit{
       currentLevel.forEach(tarjeta => {
         const subordinates = tarjetas.filter(t => t.parentId === tarjeta.id);
         subordinates.forEach(subordinate => {
-          indexMap.set(subordinate.id, index);  
-          relacionesIndexadas.push({ subo: subordinate.id, ind: index });        
+          indexMap.set(subordinate.id, index);
+          relacionesIndexadas.push({ subo: subordinate.id, ind: index });
           relaciones.push([indexMap.get(tarjeta.id)!, index]);
           index++;
         });
@@ -298,13 +298,13 @@ export class GraficoComponent implements OnInit, AfterViewChecked,AfterViewInit{
       svg.innerHTML = '';
 
       // Definir las conexiones que deseas dibujar
-      //console.log('relaciones: ',this.conectores);  
+      //console.log('relaciones: ',this.conectores);
       //const conexiones = [[0, 1],[0-0, 1-1],[0-0, 1-2],[0-0, 1-3]];
       const conexiones = this.relationships
 
       // Recorrer las conexiones y dibujar las líneas
-      
-      conexiones.forEach(([inicioIdx, finIdx]) => {        
+
+      conexiones.forEach(([inicioIdx, finIdx]) => {
         //console.log('inicioIdx: ',inicioIdx,' finIdx: ',finIdx);
         const tarjetaInicio = tarjetas[inicioIdx as number] as HTMLElement;
         const tarjetaFin = tarjetas[finIdx as number] as HTMLElement;
@@ -371,7 +371,18 @@ export class GraficoComponent implements OnInit, AfterViewChecked,AfterViewInit{
     }
 
 
-
+    getClaseNivel(nivelIndex: number): string {
+      switch (nivelIndex) {
+        case 0:
+          return 'nivel-cero'; // Clase para el primer nivel (directivos)
+        case 1:
+          return 'nivel-uno'; // Clase para el segundo nivel (gerencia)
+        case 2:
+          return 'nivel-dos'; // Clase para supervisores
+        default:
+          return 'nivel-tres'; // Clase para otros niveles
+      }
+    }
 
 
 

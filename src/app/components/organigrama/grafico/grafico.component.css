@@ -11,7 +11,7 @@
 }
 
 
-.organigrama-container::-webkit-scrollbar {
+/* .organigrama-container::-webkit-scrollbar {
   height: 8px;
   width: 8px;
 }
@@ -31,8 +31,8 @@
   left: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none; /* Para que no interfiera con los clics en las tarjetas */
-}
+  pointer-events: none;
+} */
 
 .nivel-container {
   display: flex;
@@ -40,14 +40,11 @@
   flex-direction: column;
   align-items: center;
   position: relative;
-  overflow-x: auto;
-  overflow-y: auto;
   white-space: nowrap;
   padding: 20px;
-
 }
 
-.nivel-container:not(:last-child)::after {
+/* .nivel-container:not(:last-child)::after {
   content: "";
   position: absolute;
   top: 50%;
@@ -55,33 +52,32 @@
   width: 100%;
   height: 2px;
   background: #000;
-}
+} */
 
 .nivel {
   display: flex;
   justify-content: space-around; /* Ajusta la distribución */
-  width: 100%;
   align-items: center;
   position: relative;
-  margin: 50px 30px;
+  margin: 50px 0px;
+  height: 200px;
 }
 
 
 .tarjeta-container {
-  display: flex;
+  display: block;
   justify-content: center;
-  flex-grow: -1; /* Hace que las tarjetas ocupen espacio equitativo */
-  flex-direction: column;
   align-items: center;
   position: relative;
-  overflow-x: auto;
-  overflow-y: auto;
   white-space: nowrap;
-  padding: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+  aspect-ratio: 6/9;
+  height: 100%;
 }
 
 
-.nivel .tarjeta:not(:first-child)::before {
+/* .nivel .tarjeta:not(:first-child)::before {
   content: "";
   position: absolute;
   top: -20px;
@@ -89,39 +85,66 @@
   width: 2px;
   height: 20px;
   background-color: #000;
-}
+} */
 
 .tarjeta {
-  text-align: center;
-  background-color: #cae4db;
-  border-radius: 8px;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-  padding: 10px;
+  border-radius: 5%;
   position: relative;
+  aspect-ratio: 6/9;
+  height: 100%;
 }
 
-
-.tarjeta-img {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  margin-bottom: 10px;
-}
-
-
-.tarjeta img {
+.tarjeta .bgtar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
   width: 100%;
-  border-radius: 50%;
+  height: 80%;
+  z-index: 1; /* Fondo detrás de todo */
+  border-radius: 5%;
+  box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.5);
 }
 
-.tarjeta img {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  margin-bottom: 10px;
+.tarjeta img{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 2; /* Imagen encima del fondo */
+  padding: 0;
+  filter: drop-shadow(10px 10px 5px rgba(0, 0, 0, 0.5));
 }
 
-.tarjeta::before {
+.tarjeta .info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 40%;
+  width: 100%;
+  background-color: rgba(47, 48, 97, 0.9); /* Fondo semitransparente */
+  padding: 10px;
+  z-index: 3; /* Información encima de la imagen */
+  text-align: center;
+  border-radius: 5px;
+}
+
+.info h3 {
+  margin: 0.2vw 0 0.2vw 0;
+  color: #84918c;
+  overflow-wrap: break-word;
+  white-space: normal;
+  width: 100%;
+  font-size: 0.55vw;
+}
+
+.info p {
+  color: #d4d4d4;
+  margin: 0.2vw 0 0.1vw 0;
+  width: 100%;
+  font-size: 0.45vw;
+}
+
+/* .tarjeta::before {
   content: "";
   position: absolute;
   top: -10px;
@@ -130,7 +153,32 @@
   height: 10px;
   background: #000;
   transform: translateX(-50%);
+} */
+
+
+.nivel-cero {
+  background-image: url(../../../../assets/img/fondo2.jpg);
+  background-size: cover;
 }
+
+.nivel-uno {
+  background-image: url(../../../../assets/img/fondo2.jpg);
+  background-size: cover;
+}
+
+.nivel-dos {
+  background-image: url(../../../../assets/img/fondo2.jpg);
+  background-size: cover;
+}
+
+.nivel-tres {
+  background-image: url(../../../../assets/img/fondo2.jpg);
+  background-size: cover;
+}
+
+
+
+
 
 /* Conexiones entre niveles */
 .conexiones {
@@ -184,14 +232,16 @@
   background-color: #007bff;
   color: white;
   border: none;
-  font-size: 15px;
+  font-size: 12px;
   position: relative;
   display: inline-block !important;
   visibility: visible !important;
+  cursor: pointer;
+  transition: all 300ms;
 }
 
 .btn-circle:hover {
-  background-color: #0056b3;
+  background-color: #0d9780;
 }
 
 .btn{
@@ -228,45 +278,4 @@
   border-top: 1px solid #ddd; /* Borde superior */
   padding: 15px; /* Espaciado interno */
 }
-
-
-
-.info h3 {
-  font-size: 16px;
-  margin: 5px 0;
-}
-
-.info p {
-  font-size: 12px;
-  color: #666;
-  margin: 2px 0;
-}
-
-
-
-.nivel-cero {
-  background-color: #ffcc00;
-  border: 2px solid #e6b800;
-}
-
-.nivel-uno {
-  background-color: #66ccff;
-  border: 2px solid #3399ff;
-}
-
-.nivel-dos {
-  background-color: #99ff99;
-  border: 2px solid #66cc66;
-}
-
-.nivel-tres {
-  background-color: #f0f0f0;
-  border: 2px solid #ccc;
-}
-
-
-
-
-
-
 

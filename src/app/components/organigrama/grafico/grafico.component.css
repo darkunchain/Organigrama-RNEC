@@ -10,30 +10,6 @@
   gap: 40px;
 }
 
-
-/* .organigrama-container::-webkit-scrollbar {
-  height: 8px;
-  width: 8px;
-}
-
-.organigrama-container::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
-}
-
-.contenedor-tarjetas {
-  position: relative;
-}
-
-.lineas-contenedor {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-} */
-
 .nivel-container {
   display: flex;
   justify-content: center;
@@ -44,16 +20,6 @@
   padding: 20px;
 }
 
-/* .nivel-container:not(:last-child)::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: #000;
-} */
-
 .nivel {
   display: flex;
   justify-content: space-around; /* Ajusta la distribución */
@@ -62,7 +28,6 @@
   margin: 50px 0px;
   height: 200px;
 }
-
 
 .tarjeta-container {
   display: block;
@@ -76,22 +41,16 @@
   height: 100%;
 }
 
-
-/* .nivel .tarjeta:not(:first-child)::before {
-  content: "";
-  position: absolute;
-  top: -20px;
-  left: 50%;
-  width: 2px;
-  height: 20px;
-  background-color: #000;
-} */
-
 .tarjeta {
-  border-radius: 5%;
+  border-radius: 7%;
   position: relative;
   aspect-ratio: 6/9;
   height: 100%;
+}
+
+.tarjeta:hover {
+  height: 120%;
+  transition: all 300ms;
 }
 
 .tarjeta .bgtar {
@@ -101,7 +60,7 @@
   width: 100%;
   height: 80%;
   z-index: 1; /* Fondo detrás de todo */
-  border-radius: 5%;
+  border-radius: 7%;
   box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.5);
 }
 
@@ -115,6 +74,11 @@
   filter: drop-shadow(10px 10px 5px rgba(0, 0, 0, 0.5));
 }
 
+.tarjeta:hover img {
+  top:-20px;
+  transition: all 400ms;
+}
+
 .tarjeta .info {
   position: absolute;
   bottom: 0;
@@ -125,7 +89,7 @@
   padding: 10px;
   z-index: 3; /* Información encima de la imagen */
   text-align: center;
-  border-radius: 5px;
+  border-radius: 7%;
 }
 
 .info h3 {
@@ -143,18 +107,6 @@
   width: 100%;
   font-size: 0.45vw;
 }
-
-/* .tarjeta::before {
-  content: "";
-  position: absolute;
-  top: -10px;
-  left: 50%;
-  width: 2px;
-  height: 10px;
-  background: #000;
-  transform: translateX(-50%);
-} */
-
 
 .nivel-cero {
   background-image: url(../../../../assets/img/fondo2.jpg);
@@ -175,6 +127,12 @@
   background-image: url(../../../../assets/img/fondo2.jpg);
   background-size: cover;
 }
+
+
+
+
+
+
 
 
 
